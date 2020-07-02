@@ -27,6 +27,10 @@ parser.add_argument('-d', '--dataset', type=str, default='mnist', choices=['mnis
                     metavar='DATASET',
                     help='Dataset choice.')
 
+parser.add_argument('--data-location', type=str, default='data',
+                    metavar='DATA_LOCATION',
+                    help='Dataset location.')
+
 parser.add_argument('-freys', '--freyseed', type=int, default=123,
                     metavar='FREYSEED',
                     help="""Seed for shuffling frey face dataset for test split. Ignored for other datasets.

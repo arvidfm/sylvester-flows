@@ -23,13 +23,13 @@ def load_static_mnist(args, **kwargs):
     def lines_to_np_array(lines):
         return np.array([[int(i) for i in line.split()] for line in lines])
 
-    with open(os.path.join('data', 'MNIST_static', 'binarized_mnist_train.amat')) as f:
+    with open(os.path.join(args.data_location, 'MNIST_static', 'binarized_mnist_train.amat')) as f:
         lines = f.readlines()
     x_train = lines_to_np_array(lines).astype('float32')
-    with open(os.path.join('data', 'MNIST_static', 'binarized_mnist_valid.amat')) as f:
+    with open(os.path.join(args.data_location, 'MNIST_static', 'binarized_mnist_valid.amat')) as f:
         lines = f.readlines()
     x_val = lines_to_np_array(lines).astype('float32')
-    with open(os.path.join('data', 'MNIST_static', 'binarized_mnist_test.amat')) as f:
+    with open(os.path.join(args.data_location, 'MNIST_static', 'binarized_mnist_test.amat')) as f:
         lines = f.readlines()
     x_test = lines_to_np_array(lines).astype('float32')
 
@@ -65,7 +65,7 @@ def load_freyfaces(args, **kwargs):
     TEST = 200
 
     # start processing
-    with open('data/Freyfaces/freyfaces.pkl', 'rb') as f:
+    with open(os.path.join(args.data_location, 'Freyfaces', 'freyfaces.pkl'), 'rb') as f:
         data = pickle.load(f, encoding='latin1')[0]
 
     data = data/ 255.
@@ -113,7 +113,7 @@ def load_omniglot(args, **kwargs):
     def reshape_data(data):
         return data.reshape((-1, 28, 28)).reshape((-1, 28 * 28), order='F')
 
-    omni_raw = loadmat(os.path.join('data', 'OMNIGLOT', 'chardata.mat'))
+    omni_raw = loadmat(os.path.join(args.data_location, 'OMNIGLOT', 'chardata.mat'))
 
     # train and test data
     train_data = reshape_data(omni_raw['data'].T.astype('float32'))
@@ -163,7 +163,7 @@ def load_caltech101silhouettes(args, **kwargs):
     def reshape_data(data):
         return data.reshape((-1, 28, 28)).reshape((-1, 28 * 28), order='F')
 
-    caltech_raw = loadmat(os.path.join('data', 'Caltech101Silhouettes', 'caltech101_silhouettes_28_split1.mat'))
+    caltech_raw = loadmat(os.path.join(args.data_location, 'Caltech101Silhouettes', 'caltech101_silhouettes_28_split1.mat'))
 
     # train, validation and test data
     x_train = 1. - reshape_data(caltech_raw['train_data'].astype('float32'))

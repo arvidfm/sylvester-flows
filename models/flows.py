@@ -107,7 +107,7 @@ class Sylvester(nn.Module):
         """
 
         # Amortized flow parameters
-        zk = zk.unsqueeze(1)
+        zk = zk.unsqueeze(-2)
 
         # Save diagonals for log_det_j
         diag_r1 = r1[:, self.diag_idx, self.diag_idx]
@@ -116,17 +116,18 @@ class Sylvester(nn.Module):
         r1_hat = r1
         r2_hat = r2
 
-        qr2 = torch.bmm(q_ortho, r2_hat.transpose(2, 1))
-        qr1 = torch.bmm(q_ortho, r1_hat)
+        qr2 = q_ortho @ r2_hat.transpose(2, 1)
+        qr1 = q_ortho @ r1_hat
 
-        r2qzb = torch.bmm(zk, qr2) + b
-        z = torch.bmm(self.h(r2qzb), qr1.transpose(2, 1)) + zk
-        z = z.squeeze(1)
+        r2qzb = zk @ qr2 + b
+
+        z = self.h(r2qzb) @ qr1.transpose(2, 1) + zk
+        z = z.squeeze(-2)
 
         # Compute log|det J|
         # Output log_det_j in shape (batch_size) instead of (batch_size,1)
         diag_j = diag_r1 * diag_r2
-        diag_j = self.der_h(r2qzb).squeeze(1) * diag_j
+        diag_j = self.der_h(r2qzb).squeeze(-2) * diag_j
         diag_j += 1.
         log_diag_j = diag_j.abs().log()
 
